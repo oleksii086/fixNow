@@ -26,13 +26,59 @@ const services = [
   { icon: Wrench,     label: 'General Handyman',   desc: 'Anything your home needs — we handle it all.' },
 ];
 
-const galleryItems = [
-  { src: '/images/photo_2026-07-12_00-43-26.jpg', label: 'Exterior Repair',     alt: 'Stucco and concrete exterior repair work' },
-  { src: '/images/photo_2026-07-12_00-43-28.jpg', label: 'Drywall Work',         alt: 'Drywall installation and finishing in progress' },
-  { src: '/images/photo_2026-07-12_00-43-32.jpg', label: 'Interior Painting',    alt: 'Smooth professional interior paint finish' },
-  { src: '/images/photo_2026-07-12_00-43-33.jpg', label: 'Wall Finishing',       alt: 'Clean interior wall and ceiling finish' },
-  { src: '/images/photo_2026-07-12_00-43-35.jpg', label: 'Accent Wall Painting', alt: 'Bold accent wall painting — salon project' },
+type Project = {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  composite: string;
+  alt: string;
+};
+
+const portfolioProjects: Project[] = [
+  {
+    id: 1,
+    title: 'Exterior Renovation & Privacy Fence',
+    description: 'Complete exterior transformation — old open front yard converted into a private, beautifully lit outdoor living space with a cedar fence, lattice panels, and string lights.',
+    category: 'General Repairs',
+    composite: '/images/portfolio/photo_2026-07-16_22-34-38.jpg',
+    alt: 'Before and after: exterior renovation with new cedar privacy fence and outdoor lighting',
+  },
+  {
+    id: 2,
+    title: 'Kitchen Ceiling Drywall Repair',
+    description: 'Large water-damaged section of ceiling drywall patched, skim-coated, and finish-matched to seamlessly blend with the surrounding surface.',
+    category: 'Drywall',
+    composite: '/images/portfolio/photo_2026-07-16_22-34-38_(2).jpg',
+    alt: 'Before and after: kitchen ceiling drywall crack repair and smooth finish',
+  },
+  {
+    id: 3,
+    title: 'Bathroom Wall Access Panel',
+    description: 'Damaged drywall around a plumbing access area cleaned up, framed, and fitted with a clean flush access panel — fully painted and water-resistant.',
+    category: 'Drywall',
+    composite: '/images/portfolio/photo_2026-07-16_22-34-39.jpg',
+    alt: 'Before and after: bathroom drywall repair with new plumbing access panel',
+  },
+  {
+    id: 4,
+    title: 'Exterior Stucco Patch & Seal',
+    description: 'Crumbling stucco around exterior cable penetration removed, area re-patched with matching texture, and properly sealed to prevent moisture intrusion.',
+    category: 'General Repairs',
+    composite: '/images/portfolio/photo_2026-07-16_22-34-40.jpg',
+    alt: 'Before and after: exterior stucco patch repair around cable penetration',
+  },
+  {
+    id: 5,
+    title: 'Full Room Ceiling & Drywall Restoration',
+    description: 'Collapsed ceiling with exposed rafters fully rebuilt — new drywall installed, taped, mudded, and painted to match the existing walls for a completely finished room.',
+    category: 'Drywall',
+    composite: '/images/portfolio/photo_2026-07-16_22-34-41_(2).jpg',
+    alt: 'Before and after: full room ceiling drywall restoration from exposed rafters to finished surface',
+  },
 ];
+
+const CATEGORIES = ['All', 'Drywall', 'General Repairs', 'Painting', 'Flooring', 'Doors', 'TV Mounting', 'Electrical', 'Plumbing'] as const;
 
 const stats = [
   { value: '500+', label: 'Projects Completed' },
@@ -73,18 +119,17 @@ function RevealSection({
   );
 }
 
-/* ── Lightbox ────────────────────────────────────────────────────── */
-function Lightbox({
-  items, index, onClose, onPrev, onNext,
+/* ── ProjectModal ────────────────────────────────────────────────── */
+function ProjectModal({
+  project, onClose, onPrev, onNext, total, index,
 }: {
-  items: typeof galleryItems;
-  index: number;
+  project: Project;
   onClose: () => void;
   onPrev: () => void;
   onNext: () => void;
+  total: number;
+  index: number;
 }) {
-  const item = items[index];
-
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape')     onClose();
@@ -101,52 +146,69 @@ function Lightbox({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-md"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-md p-4"
       onClick={onClose}
     >
       <div
-        className="lightbox-content relative w-full max-w-5xl mx-4 flex flex-col"
+        className="lightbox-content relative w-full max-w-4xl flex flex-col max-h-[95vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Top bar */}
-        <div className="flex items-center justify-between mb-4 px-1">
+        {/* Header */}
+        <div className="flex items-start justify-between mb-5">
           <div>
-            <span className="text-white font-bold text-lg">{item.label}</span>
-            <span className="text-white/35 text-sm ml-3">{index + 1} / {items.length}</span>
+            <span className="inline-block text-[#1D6F42] text-xs font-bold tracking-[0.2em] uppercase mb-2 bg-[#1D6F42]/10 px-3 py-1 rounded-full">
+              {project.category}
+            </span>
+            <h3 className="text-white font-black text-xl md:text-2xl leading-tight">{project.title}</h3>
+            <span className="text-white/35 text-sm">{index + 1} of {total}</span>
           </div>
           <button
             onClick={onClose}
-            className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/8 hover:bg-white/15 text-white/70 hover:text-white transition-all"
+            className="ml-4 shrink-0 w-10 h-10 flex items-center justify-center rounded-xl bg-white/8 hover:bg-white/18 text-white/70 hover:text-white transition-all"
+            aria-label="Close"
           >
             <X size={20} />
           </button>
         </div>
 
-        {/* Image */}
-        <div className="relative rounded-2xl overflow-hidden bg-white/5 border border-white/10">
+        {/* Composite image */}
+        <div className="rounded-2xl overflow-hidden border border-white/10 bg-white/5">
           <img
-            src={item.src}
-            alt={item.alt}
-            className="w-full max-h-[75vh] object-contain"
+            src={project.composite}
+            alt={project.alt}
+            className="w-full object-contain max-h-[60vh]"
           />
         </div>
 
+        {/* Before / After labels row */}
+        <div className="flex gap-3 mt-4">
+          <div className="flex items-center gap-2 bg-black/60 border border-white/10 rounded-xl px-4 py-2.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-white/40 block" />
+            <span className="text-white/60 text-sm font-semibold">Before</span>
+          </div>
+          <div className="flex items-center gap-2 bg-[#1D6F42]/15 border border-[#1D6F42]/40 rounded-xl px-4 py-2.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#1D6F42] block" />
+            <span className="text-[#1D6F42] text-sm font-semibold">After</span>
+          </div>
+        </div>
+
+        {/* Description */}
+        <p className="text-white/65 leading-relaxed mt-4 text-sm md:text-base">{project.description}</p>
+
         {/* Nav */}
-        <div className="flex items-center justify-between mt-5 px-1">
+        <div className="flex items-center justify-between mt-6 pt-5 border-t border-white/8">
           <button
             onClick={onPrev}
             className="flex items-center gap-2 bg-white/8 hover:bg-white/15 text-white/70 hover:text-white transition-all px-5 py-2.5 rounded-xl text-sm font-semibold"
           >
             <ChevronLeft size={16} /> Previous
           </button>
-          {/* Dots */}
           <div className="flex gap-1.5">
-            {items.map((_, i) => (
-              <button
+            {Array.from({ length: total }).map((_, i) => (
+              <span
                 key={i}
-                onClick={() => onClose()}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  i === index ? 'bg-[#1D6F42] w-5' : 'bg-white/25 hover:bg-white/50'
+                className={`block rounded-full transition-all duration-300 ${
+                  i === index ? 'bg-[#1D6F42] w-5 h-2' : 'bg-white/25 w-2 h-2'
                 }`}
               />
             ))}
@@ -163,40 +225,48 @@ function Lightbox({
   );
 }
 
-/* ── GalleryItem ─────────────────────────────────────────────────── */
-function GalleryItem({
-  item, onClick,
-}: { item: typeof galleryItems[0]; onClick: () => void }) {
+/* ── PortfolioCard ───────────────────────────────────────────────── */
+function PortfolioCard({ project, onClick }: { project: Project; onClick: () => void }) {
   return (
     <div
-      className="gallery-slot rounded-3xl border border-white/8 relative overflow-hidden group w-full h-full cursor-pointer"
+      className="portfolio-card group bg-[#0d0d0d] border border-white/8 rounded-2xl overflow-hidden flex flex-col cursor-pointer"
       onClick={onClick}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && onClick()}
-      aria-label={`View ${item.label} project photo`}
+      aria-label={`View ${project.title} before and after`}
     >
-      {/* Real photo */}
-      <img
-        src={item.src}
-        alt={item.alt}
-        className="absolute inset-0 w-full h-full object-cover"
-        loading="lazy"
-      />
-
-      {/* Permanent subtle gradient at bottom for label legibility */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-
-      {/* Label — always visible at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
-        <div className="text-white font-bold text-sm tracking-wide">{item.label}</div>
+      {/* Image */}
+      <div className="relative overflow-hidden" style={{ height: 220 }}>
+        <img
+          src={project.composite}
+          alt={project.alt}
+          className="portfolio-card-img w-full h-full object-cover object-top"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+        {/* Category badge */}
+        <span className="absolute top-3 left-3 text-[10px] font-bold tracking-[0.15em] uppercase bg-black/70 border border-white/15 text-white/80 px-2.5 py-1 rounded-lg backdrop-blur-sm">
+          {project.category}
+        </span>
+        {/* Hover CTA */}
+        <div className="portfolio-hover-cta absolute inset-0 flex items-center justify-center bg-black/45">
+          <span className="flex items-center gap-2 bg-[#1D6F42] text-white text-xs font-bold px-5 py-2.5 rounded-full shadow-xl shadow-[#1D6F42]/50 transition-transform duration-200 group-hover:scale-105">
+            View Before &amp; After
+          </span>
+        </div>
       </div>
 
-      {/* Hover overlay */}
-      <div className="slot-overlay absolute inset-0 bg-black/30 flex items-center justify-center z-20">
-        <div className="flex items-center gap-2 bg-[#1D6F42] text-white text-sm font-bold px-5 py-2.5 rounded-full shadow-xl shadow-[#1D6F42]/40">
-          <Expand size={14} /> View Photo
-        </div>
+      {/* Body */}
+      <div className="p-5 flex flex-col flex-1">
+        <h3 className="text-white font-bold text-base leading-snug mb-2">{project.title}</h3>
+        <p className="text-white/45 text-sm leading-relaxed flex-1 line-clamp-3">{project.description}</p>
+        <button
+          className="mt-4 flex items-center gap-1.5 text-[#1D6F42] text-xs font-bold tracking-wide uppercase hover:text-[#2d9a5c] transition-colors"
+          tabIndex={-1}
+        >
+          View Project <ArrowRight size={13} />
+        </button>
       </div>
     </div>
   );
@@ -204,9 +274,10 @@ function GalleryItem({
 
 /* ── App ─────────────────────────────────────────────────────────── */
 export default function App() {
-  const [menuOpen,    setMenuOpen]    = useState(false);
-  const [scrolled,    setScrolled]    = useState(false);
-  const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
+  const [menuOpen,      setMenuOpen]      = useState(false);
+  const [scrolled,      setScrolled]      = useState(false);
+  const [activeProject, setActiveProject] = useState<number | null>(null);
+  const [activeFilter,  setActiveFilter]  = useState<string>('All');
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -214,18 +285,23 @@ export default function App() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const openLightbox = useCallback((i: number) => setLightboxIdx(i), []);
-  const closeLightbox = useCallback(() => setLightboxIdx(null), []);
-  const prevSlide = useCallback(() =>
-    setLightboxIdx(i => i === null ? null : (i - 1 + galleryItems.length) % galleryItems.length), []);
-  const nextSlide = useCallback(() =>
-    setLightboxIdx(i => i === null ? null : (i + 1) % galleryItems.length), []);
+  const openModal  = useCallback((i: number) => setActiveProject(i), []);
+  const closeModal = useCallback(() => setActiveProject(null), []);
+
+  const filteredProjects = activeFilter === 'All'
+    ? portfolioProjects
+    : portfolioProjects.filter(p => p.category === activeFilter);
+
+  const prevProject = useCallback(() =>
+    setActiveProject(i => i === null ? null : (i - 1 + filteredProjects.length) % filteredProjects.length), [filteredProjects.length]);
+  const nextProject = useCallback(() =>
+    setActiveProject(i => i === null ? null : (i + 1) % filteredProjects.length), [filteredProjects.length]);
 
   const navLinks = [
-    { href: '#services', label: 'Services' },
-    { href: '#gallery',  label: 'Gallery' },
-    { href: '#about',    label: 'About' },
-    { href: '#contact',  label: 'Contact' },
+    { href: '#services',  label: 'Services' },
+    { href: '#portfolio', label: 'Portfolio' },
+    { href: '#about',     label: 'About' },
+    { href: '#contact',   label: 'Contact' },
   ];
 
   return (
@@ -422,63 +498,78 @@ export default function App() {
 
       <div className="divider-line" />
 
-      {/* ═══════════════ GALLERY ═══════════════ */}
-      <section id="gallery" className="py-28 px-6 bg-[#050505]">
+      {/* ═══════════════ PORTFOLIO ═══════════════ */}
+      <section id="portfolio" className="py-28 px-6 bg-[#050505]">
         <div className="max-w-6xl mx-auto">
-          <RevealSection className="text-center mb-18">
+
+          {/* Header */}
+          <RevealSection className="text-center mb-12">
             <p className="text-[#1D6F42] text-xs font-bold tracking-[0.25em] uppercase mb-4">Our Work</p>
-            <h2 className="text-4xl md:text-6xl font-black mb-5 tracking-tight">Project Gallery</h2>
+            <h2 className="text-4xl md:text-6xl font-black mb-5 tracking-tight">Recent Projects</h2>
             <p className="text-white/45 text-xl max-w-lg mx-auto leading-relaxed">
-              Real projects, real results. Every job is treated with the same premium standard of care.
+              Real before &amp; after results. Every job finished to the same premium standard.
             </p>
           </RevealSection>
 
-          {/* Desktop bento grid — 5 photos */}
-          <RevealSection className="hidden md:block">
-            <div
-              className="grid gap-4"
-              style={{
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                gridTemplateRows: '300px 300px 360px',
-              }}
-            >
-              {/* Photo 1 — exterior repair: wide left (col 1-2, row 1) */}
-              <div style={{ gridColumn: '1 / 3', gridRow: '1' }} className="h-full">
-                <GalleryItem item={galleryItems[0]} onClick={() => openLightbox(0)} />
-              </div>
-              {/* Photo 2 — drywall: normal right (col 3, row 1) */}
-              <div style={{ gridColumn: '3', gridRow: '1' }} className="h-full">
-                <GalleryItem item={galleryItems[1]} onClick={() => openLightbox(1)} />
-              </div>
-              {/* Photo 3 — painted wall: normal left (col 1, row 2) */}
-              <div style={{ gridColumn: '1', gridRow: '2' }} className="h-full">
-                <GalleryItem item={galleryItems[2]} onClick={() => openLightbox(2)} />
-              </div>
-              {/* Photo 4 — wall finish: wide right (col 2-3, row 2) */}
-              <div style={{ gridColumn: '2 / 4', gridRow: '2' }} className="h-full">
-                <GalleryItem item={galleryItems[3]} onClick={() => openLightbox(3)} />
-              </div>
-              {/* Photo 5 — accent wall: full width (col 1-3, row 3) */}
-              <div style={{ gridColumn: '1 / 4', gridRow: '3' }} className="h-full">
-                <GalleryItem item={galleryItems[4]} onClick={() => openLightbox(4)} />
-              </div>
-            </div>
-          </RevealSection>
-
-          {/* Mobile grid */}
-          <RevealSection className="md:hidden">
-            <div className="grid grid-cols-2 gap-3">
-              {galleryItems.map((item, i) => (
-                <div
-                  key={item.src}
-                  className={i === 4 ? 'col-span-2' : ''}
-                  style={{ height: i === 4 ? 240 : 200 }}
+          {/* Category Filters */}
+          <RevealSection delay={100}>
+            <div className="flex flex-wrap gap-2 justify-center mb-12">
+              {CATEGORIES.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveFilter(cat)}
+                  className={`filter-pill px-4 py-2 rounded-full text-sm font-semibold transition-all duration-250 ${
+                    activeFilter === cat
+                      ? 'bg-[#1D6F42] text-white shadow-lg shadow-[#1D6F42]/30'
+                      : 'bg-white/6 text-white/55 border border-white/10 hover:bg-white/12 hover:text-white/80'
+                  }`}
                 >
-                  <GalleryItem item={item} onClick={() => openLightbox(i)} />
-                </div>
+                  {cat}
+                </button>
               ))}
             </div>
           </RevealSection>
+
+          {/* Cards grid */}
+          {filteredProjects.length > 0 ? (
+            <RevealSection delay={150}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredProjects.map((project, i) => (
+                  <PortfolioCard
+                    key={project.id}
+                    project={project}
+                    onClick={() => openModal(i)}
+                  />
+                ))}
+              </div>
+            </RevealSection>
+          ) : (
+            <RevealSection delay={150}>
+              <div className="text-center py-20 text-white/35">
+                <SlidersHorizontal size={40} className="mx-auto mb-4 opacity-40" />
+                <p className="text-lg font-semibold">No projects in this category yet.</p>
+                <p className="text-sm mt-1">Check back soon or browse another category.</p>
+              </div>
+            </RevealSection>
+          )}
+
+          {/* CTA */}
+          <RevealSection delay={200}>
+            <div className="mt-20 text-center rounded-3xl border border-white/8 bg-gradient-to-b from-white/4 to-transparent p-12 md:p-16">
+              <p className="text-[#1D6F42] text-xs font-bold tracking-[0.25em] uppercase mb-4">Ready to Start?</p>
+              <h3 className="text-3xl md:text-5xl font-black mb-4 tracking-tight">Need Something Fixed?</h3>
+              <p className="text-white/50 text-lg mb-8 max-w-sm mx-auto leading-relaxed">
+                Professional handyman services in Los Angeles.
+              </p>
+              <a
+                href={`tel:+17473704618`}
+                className="btn-primary inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-white text-base shadow-xl shadow-[#1D6F42]/25"
+              >
+                <Phone size={18} /> Get a Free Estimate
+              </a>
+            </div>
+          </RevealSection>
+
         </div>
       </section>
 
@@ -669,14 +760,15 @@ export default function App() {
         </div>
       </div>
 
-      {/* ═══════════════ LIGHTBOX ═══════════════ */}
-      {lightboxIdx !== null && (
-        <Lightbox
-          items={galleryItems}
-          index={lightboxIdx}
-          onClose={closeLightbox}
-          onPrev={prevSlide}
-          onNext={nextSlide}
+      {/* ═══════════════ PROJECT MODAL ═══════════════ */}
+      {activeProject !== null && filteredProjects[activeProject] && (
+        <ProjectModal
+          project={filteredProjects[activeProject]}
+          index={activeProject}
+          total={filteredProjects.length}
+          onClose={closeModal}
+          onPrev={prevProject}
+          onNext={nextProject}
         />
       )}
     </div>
