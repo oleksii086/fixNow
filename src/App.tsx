@@ -7,9 +7,9 @@ import {
 } from 'lucide-react';
 
 /* ── Constants ────────────────────────────────────────────────────── */
-const PHONE      = '239-888-4620';
-const PHONE_HREF = 'tel:+12398884620';
-const SMS_HREF   = 'sms:+12398884620';
+const PHONE      = '747-370-4618';
+const PHONE_HREF = 'tel:+17473704618';
+const SMS_HREF   = 'sms:+17473704618';
 const EMAIL      = 'info@fixnowhs.com';
 const WEBSITE    = 'fixnowhs.com';
 
