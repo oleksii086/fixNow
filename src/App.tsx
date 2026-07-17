@@ -3,7 +3,7 @@ import {
   Phone, MessageSquare, ClipboardList, Paintbrush, Droplets, Zap, Tv,
   Grid3X3, DoorOpen, Archive, Wrench, Mail, Globe, ChevronDown,
   Star, Shield, Clock, Menu, X, CheckCircle, ChevronLeft,
-  ChevronRight, Expand, MapPin,
+  ChevronRight, MapPin, ArrowRight, SlidersHorizontal,
 } from 'lucide-react';
 
 /* ── Constants ────────────────────────────────────────────────────── */
