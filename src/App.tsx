@@ -7,9 +7,9 @@ import {
 } from 'lucide-react';
 
 /* ── Constants ────────────────────────────────────────────────────── */
-const PHONE      = '747-370-4618';
-const PHONE_HREF = 'tel:+17473704618';
-const SMS_HREF   = 'sms:+17473704618';
+const PHONE      = '239-888-4620';
+const PHONE_HREF = 'tel:+12398884620';
+const SMS_HREF   = 'sms:+12398884620';
 const EMAIL      = 'info@fixnowhs.com';
 const WEBSITE    = 'fixnowhs.com';
 
@@ -56,7 +56,7 @@ const portfolioProjects: Project[] = [
     id: 3,
     title: 'Bathroom Wall Access Panel',
     description: 'Damaged drywall around a plumbing access area cleaned up, framed, and fitted with a clean flush access panel — fully painted and water-resistant.',
-    category: 'Drywall',
+    category: 'Plumbing',
     composite: '/images/portfolio/photo_2026-07-16_22-34-39.jpg',
     alt: 'Before and after: bathroom drywall repair with new plumbing access panel',
   },
@@ -562,7 +562,7 @@ export default function App() {
                 Professional handyman services in Los Angeles.
               </p>
               <a
-                href={`tel:+17473704618`}
+                href={`tel:+12398884620`}
                 className="btn-primary inline-flex items-center gap-3 px-8 py-4 rounded-full font-bold text-white text-base shadow-xl shadow-[#1D6F42]/25"
               >
                 <Phone size={18} /> Get a Free Estimate
